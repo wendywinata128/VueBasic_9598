@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UGD Vue JS</title>
+    <script src="./vue.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+</head>
+
+<body style="background-color: cornflowerblue;">
+    <h1 style="text-align: center;margin-bottom: 30px;margin-top:20px;color:black">Guess The Number</h1>
+    <div id="app" class="card"
+        style="height:80vh;width:80%;margin:0 auto;background-color: blanchedalmond;display:flex;flex-direction: row;align-items: center;">
+        <div class="card" style="width: 30%;height: 80%;margin:0 auto; overflow: auto;">
+            <div style="width: 100%;height: 100%;display:flex;flex-direction:column;padding-top: 30px;">
+                <div class="form-group">
+                    <label for="inputNumber" style="text-align: center;display:block;">Your Number</label>
+                    <input
+                        :disabled="tebakAngka.correct == true || tebakAngka.btnCobaLagi == true || tebakAngka.percobaan == 3"
+                        v-model="tebakAngka.angkaUser" type="number" class="form-control" id="inputNumber"
+                        style="width: 75%;margin:0 auto;">
+                </div>
+
+                <div style="width: 70%;margin:0 auto;">
+                    <button @click="cekAngka"
+                        :disabled="tebakAngka.correct == true || tebakAngka.btnCobaLagi == true || tebakAngka.percobaan == 3"
+                        type="button" class="btn btn-primary" style="width: 49%;">GUESS</button>
+                    <button :disabled ="cekBtnReset()" @click="resetGame" type="button" class="btn btn-danger" style="width: 49%;">RESET</button>
+                </div>
+
+                <p v-if ="tebakAngka.percobaan == 3">Kamu Sudah 3x Mencoba</p>
+
+                <img v-if="tebakAngka.correct == true && tebakAngka.percobaan != 0"
+                    src="https://memegenerator.net/img/instances/30457880/you-are-correct.jpg" width="80%"
+                    style="margin:0 auto;margin-top:50px;">
+                <img v-else-if="tebakAngka.correct == false  && tebakAngka.percobaan != 0"
+                    src="https://memegenerator.net/img/instances/54771516/you-sir-are-incorrect.jpg" width="80%"
+                    style="margin:0 auto;margin-top:50px;">
+                <button :disabled = "tebakAngka.percobaan == 3" v-if="tebakAngka.correct == false && tebakAngka.percobaan != 0" @click="guessAgain"
+                    v-if="tebakAngka.percobaan != 0" type="button" class="btn btn-primary"
+                    style="width: 50%;margin:0 auto;margin-top: 15px;">GUESS AGAIN</button>
+                
+
+            </div>
+        </div>
+    </div>
+
+    <div id="footer">
+        <h4 style="text-align:center">{{wendyWinata.nama}} | {{wendyWinata.npm}} | {{wendyWinata.kelas}}</h4>
+    </div>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+    crossorigin="anonymous"></script>
+
+<script>
+    var app1 = new Vue({
+        el: "#app",
+        data: {
+            tebakAngka: {
+                angkaUser: 0,
+                percobaan: 0,
+                btnCobaLagi: false,
+                angkaRandom: 0,
+                correct: false
+            }
+        },
+        methods: {
+            randomAngka() {
+                this.tebakAngka.angkaRandom = Math.ceil(Math.random() * 10 + 1)
+            },
+            cekAngka() {
+                if (this.tebakAngka.angkaUser == this.tebakAngka.angkaRandom) {
+                    this.tebakAngka.correct = true;
+                    this.tebakAngka.percobaan++;
+                }
+                else {
+                    this.tebakAngka.percobaan++;
+                    this.tebakAngka.btnCobaLagi = true;
+                }
+            },
+            resetGame() {
+                this.tebakAngka.angkaUser = 0;
+                this.tebakAngka.percobaan = 0;
+                this.tebakAngka.btnCobaLagi = false;
+                this.tebakAngka.angkaRandom = 0;
+                this.tebakAngka.correct = false;
+                this.randomAngka();
+                console.log(`angka random ${this.tebakAngka.angkaRandom}`);
+            },
+            guessAgain() {
+                this.tebakAngka.btnCobaLagi = false;
+            },
+            cekBtnReset(){
+                if(this.tebakAngka.correct == true){
+                    return false;
+                }else if(this.tebakAngka.percobaan == 3){
+                    return false;
+                }else{
+                    return true;
+                }
+            }
+        },
+    });
+
+    var app2 = new Vue({
+        el: "#footer",
+        data: {
+            wendyWinata: {
+                nama: 'Wendy Winata',
+                npm: '180709598',
+                kelas: 'D'
+            }
+        },
+        methods: {},
+    });
+
+    app1.randomAngka();
+    console.log(`angka random ${app1.tebakAngka.angkaRandom}`);
+</script>
+
+</html>
